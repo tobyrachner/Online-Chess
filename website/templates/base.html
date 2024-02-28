@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block links %}
+  <link rel="stylesheet" href="../static/base.css">
+  {% endblock %}
+  <title>{% block title %}Home{% endblock %}</title>
+</head>
+<body>
+  <header>
+    <div class="header-group" id="left">
+      <a class="header-button" href="{{ url_for('views.home') }}">Chess.org</a>
+      <a class="header-button" href="">Active Games</a>
+    </div>
+    <div class="header-group" id="right">
+      <a class="header-button" href="{{ url_for('auth.login') }}">Login</a>
+      <a class="header-button" href="{{ url_for('auth.sign_up') }}">Sign up</a>
+    </div>
+  </header>
+  {% block content %}{% endblock %}
+</body>
+</html>
