@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block links %}
+<link rel="stylesheet" href="../static/base.css">
+<link rel="stylesheet" href="../static/auth.css">
+{% endblock %}
+{% block content %}
+<h1>Login</h1>
+<form method="POST">
+  <fieldset>
+    <label for="user">E-mail: <br><input id="email" name="email" type="email" class="email" required></label>
+    <label for="password">Password: <br><input id="password" name="password" type="password" required></label>
+    <button type="submit" class="submit">Login</button>
+  </fieldset>
+</form>
+{% endblock %}
