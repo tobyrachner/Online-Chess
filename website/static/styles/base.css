@@ -55,10 +55,15 @@ header {
 }
 
 .board {
-    height: min(80vh, 100vw);
-    width: min(80vh, 100vw);
+    height: 504px;
+    width: 504px;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
+}
+.square {
+    overflow: hidden;
+    width: 63px;
+    height: 63px;
 }
 .white {
     background-color: #fff;
