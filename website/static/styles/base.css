@@ -35,6 +35,10 @@ header {
 }
 
 
+.alert {
+    position: absolute;
+}
+
 .chat {
     width: 20%;
     height: 60vh;
@@ -55,19 +59,30 @@ header {
 }
 
 .board {
-    height: 504px;
-    width: 504px;
+    width: min(80vh, 75vw);
+    aspect-ratio: 1 / 1;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
 }
 .square {
-    overflow: hidden;
-    width: 63px;
-    height: 63px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .white {
     background-color: #fff;
 }
 .black {
     background-color: #000;
+}
+.piece {
+    width: 80%;
+    aspect-ratio: 1 / 1;
+    position: absolute;
+    z-index: 1;
+}
+.piece.dragging {
+    z-index: 20;
 }

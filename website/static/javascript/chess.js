@@ -1,97 +1,68 @@
-function CreatePieceObject()  {
-    this.r = function (color) { return new Rook(color);};
-    this.b = function (color) { return new Bishop(color);};
-    this.q = function (color) { return new Queen(color);};
-    this.n = function (color) { return new Knight(color);};
-    this.k = function (color) { return new King(color);};
-    this.p = function (color) { return new Pawn(color);};
-}
-const createPieces = new CreatePieceObject();
-
-
-function addPiecesToHtml(board) {
-    let addPiece = function (type, color, pos) {
-        let square = document.getElementById(pos);
-        square.innerHTML = `<img src="http://127.0.0.1:5000/pieces/${color + '_' + type}" class="piece" width="63" height="63"></img>`;
-    }
-   
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; j++) {
-            let square = board[i][j];
-            if (!(square === 0)) {
-                addPiece(square.type, square.color, i.toString() + j.toString());
-            }
-        }
-    }
+function testSetup() {
+  let board = fenToArray('3k4/1qr2b2/6n1/8/8/5P2/p3R1N1/2KBQ3');
+  addPiecesToHtml(board);
+  addDragListeners();
 }
 
+let cOffX = 0;
+let cOffY = 0;
 
-function fenToArray(fen) {
-    const rows = fen.split('/');
-    let board = [];
-
-
-    // FEN example: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
-    // lower case = black piece, upper case = white piece, number = number of empty squares, lines are separated by '/'
-
-
-    for (let i = 0; i < rows.length; i++) {
-        let row = [];
-        for (let j = 0; j < rows[i].length; j++) {
-            let character = rows[i][j];
-
-
-            if (!isNaN(character)) {
-                for (let j = 0; j < +character; j++) {
-                    row.push(0)
-                }
-            } else {
-                let color = 'white';
-                if (character === character.toLowerCase()) {color = 'black'}
-                row.push(createPieces[character.toLowerCase()](color))
-            }
-        }
-
-
-        board.push(row)
-    }
-    return board
+function addDragListeners() {
+  let pieces = document.getElementsByClassName('piece');
+  for (let i = 0; i < pieces.length; i++) {
+    pieces[i].addEventListener('mousedown', dragStart);
+  }
 }
 
+function dragStart(e) {
+  e = e || window.event;
+  e.preventDefault();
+  
+  let piece = e.target;
 
-function generateFEN(board) {
-    let fen = '';
-    let zeroCount = 0
+  cOffX = e.clientX;
+  cOffY = e.clientY;
 
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('mouseup', dragEnd);
 
-    for (let row = 0; row < board.length; row++) {
-        if (!(fen == '')) {fen += '/';}
+  piece.classList.add('dragging');
+};
 
+function dragMove(e) {
+  e = e || window.event;
+  e.preventDefault();
 
-        if (zeroCount) {fen += zeroCount.toString();}
-        zeroCount = 0
+  let piece = e.target;
 
+  piece.style.center
 
-        for (let i = 0; i < board[row].length; i++) {
-            let obj = board[row][i];
+  piece.style.top = (e.clientY - cOffY).toString() + 'px';
+  piece.style.left = (e.clientX - cOffX).toString() + 'px';
+};
 
+function dragEnd(e) {
+  e = e || window.event;
+  e.preventDefault();
 
-            if (obj === 0) {
-                zeroCount += 1;
-            } else {
-                if (zeroCount) {
-                    fen += zeroCount.toString();
-                    zeroCount = 0;
-                }
+  let piece = e.target;
+  let prevSquare = piece.parentElement;
 
+  document.removeEventListener('mousemove', dragMove);
+  document.removeEventListener('mouseup', dragEnd);
 
-                let letter = obj.type[0];
-                if (obj.color === 'white') {
-                    letter = letter.toUpperCase()
-                }
-                fen += letter;
-            }
-        }
-    }
-    return fen;
+  piece.classList.remove('dragging');
+  piece.style.top = null;
+  piece.style.left = null;
+
+  let square = document.elementFromPoint(e.clientX, e.clientY);
+  if (square.classList.contains('piece')) {
+    square = square.parentElement;
+  }
+
+  if (square.classList.contains('square')) {
+    prevSquare.removeChild(piece);
+    square.innerHTML = '';
+    square.appendChild(piece);
+  }
 }
