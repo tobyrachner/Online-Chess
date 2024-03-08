@@ -8,7 +8,7 @@ let cOffX = 0;
 let cOffY = 0;
 
 function testSetup() {
-  board = fenToArray('3k4/1qr2b2/6n1/8/8/5P2/p3R1N1/2KBQ3');
+  board = fenToArray('3k4/1qr2b1p/6n1/8/1p6/5P2/P3R1N1/2KBQ3');
   addPiecesToHtml(board);
   addDragListeners();
 }
@@ -103,8 +103,9 @@ function dragEnd(e) {
 function movePiece(board, square, prevSquare, piece, pieceHtml) {
   square.innerHTML = '';
   square.appendChild(pieceHtml);    
-  board[Number(square.id[0])][Number(square.id[1])] = piece
-  board[Number(prevSquare.id[0])][Number(prevSquare.id[1])] = 0
+  board[Number(square.id[0])][Number(square.id[1])] = piece;
+  board[Number(prevSquare.id[0])][Number(prevSquare.id[1])] = 0;
+  piece.changePosition(square.id)
 }
 
 testSetup();

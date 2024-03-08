@@ -1,10 +1,10 @@
 function CreatePieceObject()  {
-    this.r = function (color) { return new Rook(color);};
-    this.b = function (color) { return new Bishop(color);};
-    this.q = function (color) { return new Queen(color);};
-    this.n = function (color) { return new Knight(color);};
-    this.k = function (color) { return new King(color);};
-    this.p = function (color) { return new Pawn(color);};
+    this.r = function (color, board, pos) { return new Rook(color, board, pos);};
+    this.b = function (color, board, pos) { return new Bishop(color, board, pos);};
+    this.q = function (color, board, pos) { return new Queen(color, board, pos);};
+    this.n = function (color, board, pos) { return new Knight(color, board, pos);};
+    this.k = function (color, board, pos) { return new King(color, board, pos);};
+    this.p = function (color, board, pos) { return new Pawn(color, board, pos);};
 }
 const createPieces = new CreatePieceObject();
 
@@ -37,18 +37,21 @@ function fenToArray(fen) {
 
     for (let i = 0; i < rows.length; i++) {
         let row = [];
+        let currColumn = -1
+
         for (let j = 0; j < rows[i].length; j++) {
             let character = rows[i][j];
 
-
             if (!isNaN(character)) {
+                currColumn += Number(character);
                 for (let j = 0; j < +character; j++) {
                     row.push(0)
                 }
             } else {
+                currColumn += 1;
                 let color = 'white';
                 if (character === character.toLowerCase()) {color = 'black'}
-                row.push(createPieces[character.toLowerCase()](color))
+                row.push(createPieces[character.toLowerCase()](color, board, i.toString() + currColumn.toString()));
             }
         }
 
