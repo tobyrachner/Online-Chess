@@ -98,6 +98,7 @@ function dragEnd(e) {
   piece = undefined;
   pieceHtml = undefined;
   availSquares = [];
+  emptyAvailSquares = [];
 }
 
 function movePiece(board, square, prevSquare, piece, pieceHtml) {

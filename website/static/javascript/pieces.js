@@ -188,17 +188,13 @@ class Pawn extends Piece {
     availSquares(getSquaresAttacking=false, board=this.board) {
         let squares = [];
 
-        console.log(board[this.row + this.direction][this.col])
         if (board[this.row + this.direction][this.col] === 0) {
-            console.log('0')
             squares.push(squareArrayToString([this.row + this.direction, this.col]));
 
             if (this.row === this.homeRow && board[this.row + this.direction * 2][this.col] === 0) {
-                console.log('1')
                 squares.push(squareArrayToString([this.row + this.direction * 2, this.col]));
             }
         }
-        console.log(squares)
         return squares
     }
 }
