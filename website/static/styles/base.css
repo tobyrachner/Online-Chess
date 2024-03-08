@@ -64,6 +64,7 @@ header {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
+    background-color: rgba(69, 102, 186, 0.8);
 }
 .square {
     position: relative;
@@ -77,6 +78,16 @@ header {
 .black {
     background-color: #000;
 }
+#s00, #s01 {
+    border-radius: 1.3em;
+}
+.availCircle {
+    width: 30%;
+    aspect-ratio: 1 / 1;
+    background-color: rgba(69, 102, 186, 0.8);
+    border-radius: 50px;
+}
+
 .piece {
     width: 80%;
     aspect-ratio: 1 / 1;

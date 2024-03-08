@@ -1,3 +1,13 @@
+function allSquares() {
+    let squares = [];
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            squares.push(i.toString() + j.toString());
+        }
+    }
+    return squares;
+}
+
 class Piece {
     constructor(color) {
         this.color = color;
@@ -9,12 +19,23 @@ class Rook extends Piece {
         super(color);
         this.type = "rook";
     }
+
+    availSquares() {
+        return allSquares()
+    }
 }
 
 class Bishop extends Piece {
     constructor(color) {
         super(color);
         this.type = "bishop";
+    }
+
+    availSquares() {
+        let squares = [];
+        for (let i = 0; i < 8; i++) {
+            squares.push('0' + i.toString());
+        } return squares;
     }
 }
 

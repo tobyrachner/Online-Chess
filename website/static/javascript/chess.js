@@ -1,11 +1,23 @@
+let board = undefined;
+let piece = undefined;
+let pieceHtml = undefined;
+let availSquares = [];
+let emptyAvailSquares = [];
+
+let cOffX = 0;
+let cOffY = 0;
+
 function testSetup() {
-  let board = fenToArray('3k4/1qr2b2/6n1/8/8/5P2/p3R1N1/2KBQ3');
+  board = fenToArray('3k4/1qr2b2/6n1/8/8/5P2/p3R1N1/2KBQ3');
   addPiecesToHtml(board);
   addDragListeners();
 }
 
-let cOffX = 0;
-let cOffY = 0;
+function createCircle() {
+  let circle = document.createElement('div');
+  circle.className = 'availCircle';
+  return circle;
+}
 
 function addDragListeners() {
   let pieces = document.getElementsByClassName('piece');
@@ -18,7 +30,21 @@ function dragStart(e) {
   e = e || window.event;
   e.preventDefault();
   
-  let piece = e.target;
+  pieceHtml = e.target;
+  let square = pieceHtml.parentElement.id
+  piece = board[Number(square[0])][Number(square[1])];
+
+  availSquares = piece.availSquares();
+  for (let i = 0; i < availSquares.length; i++) {
+    let availSquare = document.getElementById(availSquares[i]);
+
+    if (availSquare.hasChildNodes()) {
+      availSquare.style.borderRadius = '1.3em'
+    } else {
+      availSquare.appendChild(createCircle());
+      emptyAvailSquares.push(availSquare); 
+    }
+  }
 
   cOffX = e.clientX;
   cOffY = e.clientY;
@@ -26,43 +52,59 @@ function dragStart(e) {
   document.addEventListener('mousemove', dragMove);
   document.addEventListener('mouseup', dragEnd);
 
-  piece.classList.add('dragging');
+  pieceHtml.classList.add('dragging');
 };
 
 function dragMove(e) {
   e = e || window.event;
   e.preventDefault();
 
-  let piece = e.target;
+  pieceHtml.style.center
 
-  piece.style.center
-
-  piece.style.top = (e.clientY - cOffY).toString() + 'px';
-  piece.style.left = (e.clientX - cOffX).toString() + 'px';
+  pieceHtml.style.top = (e.clientY - cOffY).toString() + 'px';
+  pieceHtml.style.left = (e.clientX - cOffX).toString() + 'px';
 };
 
 function dragEnd(e) {
   e = e || window.event;
   e.preventDefault();
 
-  let piece = e.target;
-  let prevSquare = piece.parentElement;
+  let prevSquare = pieceHtml.parentElement;
+
+  for (let i = 0; i < availSquares.length; i++) {
+    let availSquare = document.getElementById(availSquares[i]);
+    availSquare.style.borderRadius = null;
+    if (emptyAvailSquares.includes(availSquare)) {
+      availSquare.innerHTML = '';
+    }
+  }
 
   document.removeEventListener('mousemove', dragMove);
   document.removeEventListener('mouseup', dragEnd);
 
-  piece.classList.remove('dragging');
-  piece.style.top = null;
-  piece.style.left = null;
+  pieceHtml.classList.remove('dragging');
+  pieceHtml.style.top = null;
+  pieceHtml.style.left = null;
 
   let square = document.elementFromPoint(e.clientX, e.clientY);
   if (square.classList.contains('piece')) {
     square = square.parentElement;
   }
 
-  if (square.classList.contains('square')) {
-    prevSquare.removeChild(piece);
-    square.innerHTML = '';
-    square.appendChild(piece);
+  if (square.classList.contains('square') && availSquares.includes(square.id)) {
+    movePiece(board, square, prevSquare, piece, pieceHtml)
   }
+
+  piece = undefined;
+  pieceHtml = undefined;
+  availSquares = [];
 }
+
+function movePiece(board, square, prevSquare, piece, pieceHtml) {
+  square.innerHTML = '';
+  square.appendChild(pieceHtml);    
+  board[Number(square.id[0])][Number(square.id[1])] = piece
+  board[Number(prevSquare.id[0])][Number(prevSquare.id[1])] = 0
+}
+
+testSetup();
