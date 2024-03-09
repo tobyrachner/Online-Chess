@@ -1,4 +1,11 @@
-let activePlayer = 'w';
+let pieces = [];
+let activePlayer = 'white';
+const changePlayers = {
+    'w': 'white',
+    'b': 'black',
+    'white': 'black',
+    'black': 'white',
+}
 
 function CreatePieceObject()  {
     this.r = function (color, board, pos) { return new Rook(color, board, pos);};
@@ -29,7 +36,9 @@ function addPiecesToHtml(board) {
 
 
 function fenToArray(fen) {
-    const rows = fen.split('/');
+    fen = fen.split(' ');
+    const rows = fen[0].split('/');
+    activePlayer = changePlayers[fen[1]];
     let board = [];
 
 
@@ -55,6 +64,7 @@ function fenToArray(fen) {
                 if (character === character.toLowerCase()) {color = 'black'}
                 let piece = createPieces[character.toLowerCase()](color, board, i.toString() + currColumn.toString());
                 row.push(piece);
+                pieces.push(piece);
 
                 if (piece.type === 'king') {
                     kings[piece.color] = piece;

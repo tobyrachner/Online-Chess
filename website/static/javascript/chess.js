@@ -8,7 +8,7 @@ let cOffX = 0;
 let cOffY = 0;
 
 function testSetup() {
-  board = fenToArray('3k4/1qr2b1p/6n1/8/1p6/5P2/P3R1N1/2KBQ3');
+  board = fenToArray('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
   addPiecesToHtml(board);
   addDragListeners();
 }
@@ -33,6 +33,10 @@ function dragStart(e) {
   pieceHtml = e.target;
   let square = pieceHtml.parentElement.id
   piece = board[Number(square[0])][Number(square[1])];
+
+  if (piece.color != activePlayer) {
+    return
+  }
 
   availSquares = piece.availSquares();
   for (let i = 0; i < availSquares.length; i++) {
@@ -107,6 +111,23 @@ function movePiece(board, square, prevSquare, piece, pieceHtml) {
   board[Number(square.id[0])][Number(square.id[1])] = piece;
   board[Number(prevSquare.id[0])][Number(prevSquare.id[1])] = 0;
   piece.changePosition(square.id)
+
+  activePlayer = changePlayers[activePlayer];
+  let gameOver = checkGameOver()
+  if (gameOver) {console.log(gameOver)}
+}
+
+function checkGameOver() {
+  for (let i = 0; i < pieces.length; i++) {
+    let piece = pieces[i];
+    if (piece.color === activePlayer && piece.availSquares().length > 0) {
+      return false;
+    }
+  }
+  if (kings[activePlayer].isAttacked()) {
+    return 'checkmate';
+  }
+  return 'stalemate';
 }
 
 testSetup();
