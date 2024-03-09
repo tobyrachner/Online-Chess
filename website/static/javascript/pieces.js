@@ -4,6 +4,8 @@ const validRange = [...Array(boardSize).keys()]
 const knightOffsets = [[-2, 1], [-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1]];
 const kingOffsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
+let kings = {};
+
 function allSquares() {
     let squares = [];
     for (let i = 0; i < 8; i++) {
@@ -32,7 +34,72 @@ class Piece {
         this.row = Number(pos[0]);
         this.col = Number(pos[1]);
     }
-  }
+
+    seeIfCheck(square) {
+        let board = [];
+        for (let i = 0; i < this.board.length; i++) {
+            board.push([...this.board[i]]);
+        }
+        board[this.row][this.col] = 0;
+        board[square[0]][square[1]] = this;
+        
+        if (kings[this.color].isAttacked(board)) {
+            return true;
+        }
+        return false;
+    }
+
+    isAttacked(board, square, color=this.color) {
+        if (square == undefined) {square = this.pos}
+        if (board == undefined) {board = this.board}
+        let piecesInVision = [];
+        square = squareArrayToString(square);
+        let row = Number(square[0]);
+        let col = Number(square[1]);
+
+        // diagonals + straights
+        let stop = [false, false, false, false, false, false, false, false];
+        for (let i = 1; i < boardSize; i++) {
+            let testSquares = [[row, col + i], [row + i, col], [row, col - i], [row - i, col], [row - i, col + i], [row + i, col + i], [row + i, col - i], [row - i, col - i]];
+            for (let x = 0; x < testSquares.length; x++) {
+                if (!stop[x]) {
+                    if (validRange.includes(testSquares[x][0]) && validRange.includes(testSquares[x][1])) {
+                        let onSquare = board[testSquares[x][0]][testSquares[x][1]];
+                        if (onSquare === 0) {continue}
+
+                        stop[x] = true;
+                        if (onSquare.color != color) {
+                            piecesInVision.push(onSquare);
+                        }
+                    }
+                }
+            }
+        } 
+
+        // knight moves
+        for (let i = 0; i < knightOffsets.length; i++) {
+            let testSquare = [row + knightOffsets[i][0], col + knightOffsets[i][1]];
+            if (validRange.includes(testSquare[0]) && validRange.includes(testSquare[1])) {
+                let onSquare = board[testSquare[0]][testSquare[1]];
+                if (onSquare != 0 && onSquare.color != color) {
+                    piecesInVision.push(onSquare);
+                }
+            }
+        }
+        // don't need to include king and pawn moves because they would be included in either straights or diagonals if they were in attack range
+
+        for (let i = 0; i < piecesInVision.length; i++) {
+            let piece = piecesInVision[i];
+            if (piece.type == 'pawn' || piece.type == 'king') {
+                if (piece.squaresAttacking().includes(square)) {
+                    return true;
+                }
+            } else if (piece.availSquares(true, board).includes(square)) {
+                return true;
+            }
+        } return false;
+    }
+}
   
 class Rook extends Piece {
     constructor(color, board, pos) {
@@ -40,7 +107,8 @@ class Rook extends Piece {
         this.type = "rook";
     }
 
-    availSquares(getSquaresAttacking=false, board=this.board) {
+    availSquares(getSquaresAttacking, board) {
+        if (board == undefined) {board = this.board}
         let squares = [];
         let stop = [false, false, false, false];
 
@@ -61,7 +129,18 @@ class Rook extends Piece {
                     }
                 }
             }
-        } return squares
+        } 
+
+        if (getSquaresAttacking) {
+            return squares;
+        }
+
+        let returnSquares = [];
+        for (let i = 0; i < squares.length; i++) {
+            if (!this.seeIfCheck(squares[i])) {
+                returnSquares.push(squares[i]);
+            }
+        }  return returnSquares
     }
 }
 
@@ -71,7 +150,8 @@ class Bishop extends Piece {
         this.type = "bishop";
     }
 
-    availSquares(getSquaresAttacking=false, board=this.board) {
+    availSquares(getSquaresAttacking, board) {
+        if (board == undefined) {board = this.board}
         let squares = [];
         let stop = [false, false, false, false];
 
@@ -92,7 +172,18 @@ class Bishop extends Piece {
                     }
                 }
             }
-        } return squares
+        } 
+
+        if (getSquaresAttacking) {
+            return squares;
+        }
+
+        let returnSquares = [];
+        for (let i = 0; i < squares.length; i++) {
+            if (!this.seeIfCheck(squares[i])) {
+                returnSquares.push(squares[i]);
+            }
+        }  return returnSquares
     }
 }
 
@@ -102,7 +193,8 @@ class Queen extends Piece {
         this.type = "queen";
     }
 
-    availSquares(getSquaresAttacking=false, board=this.board) {
+    availSquares(getSquaresAttacking, board) {
+        if (board == undefined) {board = this.board}
         let squares = [];
         let stop = [false, false, false, false];
 
@@ -123,7 +215,18 @@ class Queen extends Piece {
                     }
                 }
             }
-        } return squares
+        } 
+
+        if (getSquaresAttacking) {
+            return squares;
+        }
+
+        let returnSquares = [];
+        for (let i = 0; i < squares.length; i++) {
+            if (!this.seeIfCheck(squares[i])) {
+                returnSquares.push(squares[i]);
+            }
+        }  return returnSquares
     }
 }
 
@@ -134,7 +237,8 @@ class Knight extends Piece {
         // spelled Knight as night so the first character of piece.type is equal to notation symbol (n)
     }
 
-    availSquares(getSquaresAttacking=false, board=this.board) {
+    availSquares(getSquaresAttacking, board) {
+        if (board == undefined) {board = this.board}
         let squares = [];
 
         for (let i = 0; i < knightOffsets.length; i++) {
@@ -144,11 +248,20 @@ class Knight extends Piece {
                 if (onSquare != 0 && onSquare.color == this.color && !getSquaresAttacking) {continue}
                 squares.push(squareArrayToString(square));
             }
-        } return squares
+        } 
+
+        if (getSquaresAttacking) {
+            return squares;
+        }
+
+        let returnSquares = [];
+        for (let i = 0; i < squares.length; i++) {
+            if (!this.seeIfCheck(squares[i])) {
+                returnSquares.push(squares[i]);
+            }
+        }  return returnSquares
     }
 } 
-
-
 
 class King extends Piece {
     constructor(color, board, pos) {
@@ -156,14 +269,37 @@ class King extends Piece {
         this.type = "king";
     }
 
-    availSquares(getSquaresAttacking=false, board=this.board) {
+    availSquares(board=this.board) {
         let squares = [];
 
         for (let i = 0; i < kingOffsets.length; i++) {
             let square = [this.row + kingOffsets[i][0], this.col + kingOffsets[i][1]];
             if (validRange.includes(square[0]) && validRange.includes(square[1])) {
                 let onSquare = board[square[0]][square[1]];
-                if (onSquare != 0 && onSquare.color == this.color && !getSquaresAttacking) {continue}
+                if (onSquare != 0 && onSquare.color == this.color) {continue}
+                squares.push(squareArrayToString(square));
+            }
+        } 
+
+        let testBoard = [];
+        for (let i = 0; i < this.board.length; i++) {
+            testBoard.push([...this.board[i]]);
+        }
+        testBoard[this.row][this.col] = 0;
+        let returnSquares = [];
+        for (let i = 0; i < squares.length; i++) {
+            if (!this.isAttacked(testBoard, squares[i])) {
+                returnSquares.push(squares[i]);
+            }
+        }  return returnSquares
+    }
+
+    squaresAttacking() {
+        let squares = [];
+
+        for (let i = 0; i < kingOffsets.length; i++) {
+            let square = [this.row + kingOffsets[i][0], this.col + kingOffsets[i][1]];
+            if (validRange.includes(square[0]) && validRange.includes(square[1])) {
                 squares.push(squareArrayToString(square));
             }
         } return squares
@@ -185,7 +321,7 @@ class Pawn extends Piece {
         }
     }
 
-    availSquares(getSquaresAttacking=false, board=this.board) {
+    availSquares(getSquaresAttacking, board=this.board) {
         let squares = [];
 
         if (board[this.row + this.direction][this.col] === 0) {
@@ -195,6 +331,29 @@ class Pawn extends Piece {
                 squares.push(squareArrayToString([this.row + this.direction * 2, this.col]));
             }
         }
-        return squares
+        if (validRange.includes(this.col + 1) && board[this.row + this.direction][this.col + 1] != 0 &&  board[this.row + this.direction][this.col + 1].color != this.color) {
+            squares.push(squareArrayToString([[this.row + this.direction], [this.col + 1]]));
+        }
+        if (validRange.includes(this.col - 1) && board[this.row + this.direction][this.col - 1] != 0 &&  board[this.row + this.direction][this.col - 1].color != this.color) {
+            squares.push(squareArrayToString([[this.row + this.direction], [this.col - 1]]));
+        } 
+
+        if (getSquaresAttacking) {
+            return squares;
+        }
+
+        let returnSquares = [];
+        for (let i = 0; i < squares.length; i++) {
+            if (!this.seeIfCheck(squares[i])) {
+                returnSquares.push(squares[i]);
+            }
+        }  return returnSquares
+    }
+
+    squaresAttacking() {
+        let squares = [];
+        if (validRange.includes(this.col - 1)) {squares.push((this.row + this.direction).toString() + (this.col - 1).toString());}
+        if (validRange.includes(this.col + 1)) {squares.push((this.row + this.direction).toString() + (this.col + 1).toString());}
+        return squares;
     }
 }

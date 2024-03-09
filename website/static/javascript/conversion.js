@@ -1,3 +1,5 @@
+let activePlayer = 'w';
+
 function CreatePieceObject()  {
     this.r = function (color, board, pos) { return new Rook(color, board, pos);};
     this.b = function (color, board, pos) { return new Bishop(color, board, pos);};
@@ -31,8 +33,8 @@ function fenToArray(fen) {
     let board = [];
 
 
-    // FEN example: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
-    // lower case = black piece, upper case = white piece, number = number of empty squares, lines are separated by '/'
+    // FEN example: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+    // more infos here: https://www.chess.com/terms/fen-chess
 
 
     for (let i = 0; i < rows.length; i++) {
@@ -51,7 +53,12 @@ function fenToArray(fen) {
                 currColumn += 1;
                 let color = 'white';
                 if (character === character.toLowerCase()) {color = 'black'}
-                row.push(createPieces[character.toLowerCase()](color, board, i.toString() + currColumn.toString()));
+                let piece = createPieces[character.toLowerCase()](color, board, i.toString() + currColumn.toString());
+                row.push(piece);
+
+                if (piece.type === 'king') {
+                    kings[piece.color] = piece;
+                }
             }
         }
 
