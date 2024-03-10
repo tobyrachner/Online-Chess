@@ -97,3 +97,24 @@ header {
 .piece.dragging {
     z-index: 20;
 }
+
+
+.promote-button {
+    width: 60%;
+    aspect-ratio: 1 / 1;
+    position: absolute;
+    left: 25px;
+    z-index: 7;
+}
+#promote-bishop {
+    top: -60px;
+}
+#promote-knight {
+    top: -20px;
+}
+#promote-rook {
+    top: 20px;
+}
+#promote-queen {
+    top: 60px;
+}

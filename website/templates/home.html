@@ -8,10 +8,10 @@
 <div class="home-content">
   <div class="chat">
     <div class="chat-history"></div>
-    <input type="text" class="chatbox" placeholder="Start typing...">
-    <button data-link="{{ url_for('views.get_piece_image', piece='test') }}" onclick="dragPiece(this)">test</button>
+    <input type="text" class="chatbox" placeholder="Start typing..." id="chat-input">
+    <button data-link="{{ url_for('views.get_piece_image', piece='test') }}" onclick="dragPiece(this)" id="test-button">test</button>
   </div>
-  <div class="board">
+  <div class="board" id="board">
     <div class="square white" id="00"></div>
     <div class="square black" id="01"></div>
     <div class="square white" id="02"></div>
@@ -20,7 +20,6 @@
     <div class="square black" id="05"></div>
     <div class="square white" id="06"></div>
     <div class="square black" id="07"></div>
-
 
     <div class="square black" id="10"></div>
     <div class="square white" id="11"></div>
@@ -40,7 +39,6 @@
     <div class="square white" id="26"></div>
     <div class="square black" id="27"></div>
 
-
     <div class="square black" id="30"></div>
     <div class="square white" id="31"></div>
     <div class="square black" id="32"></div>
@@ -59,7 +57,6 @@
     <div class="square white" id="46"></div>
     <div class="square black" id="47"></div>
 
-
     <div class="square black" id="50"></div>
     <div class="square white" id="51"></div>
     <div class="square black" id="52"></div>
@@ -77,7 +74,6 @@
     <div class="square black" id="65"></div>
     <div class="square white" id="66"></div>
     <div class="square black" id="67"></div>
-
 
     <div class="square black" id="70"></div>
     <div class="square white" id="71"></div>

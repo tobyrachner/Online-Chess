@@ -377,4 +377,8 @@ class Pawn extends Piece {
         if (validRange.includes(this.col + 1)) {squares.push((this.row + this.direction).toString() + (this.col + 1).toString());}
         return squares;
     }
+
+    promote(type, board) {
+        return createPieces[type](this.color, board, this.pos);
+    }
 }

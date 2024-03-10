@@ -1,3 +1,13 @@
+let controller = new AbortController();;
+let { signal } = controller;
+
+const promoteButtons = document.createElement('div');
+promoteButtons.className = 'promote-buttons';
+promoteButtons.innerHTML = `<img class="promote-button" id="promote-bishop" src="http://127.0.0.1:5000/pieces/white_bishop">
+<img class="promote-button" id="promote-knight" src="http://127.0.0.1:5000/pieces/white_night">
+<img class="promote-button" id="promote-rook" src="http://127.0.0.1:5000/pieces/white_rook">
+<img class="promote-button" id="promote-queen" src="http://127.0.0.1:5000/pieces/white_queen">`;
+
 let board = undefined;
 let piece = undefined;
 let pieceHtml = undefined;
@@ -9,7 +19,7 @@ let cOffY = 0;
 
 function setup(fen) {
   if (fen) {board = fenToArray(fen);}
-  else {board = fenToArray('2k2r2/2q5/p1p1r3/1p6/6Pp/4NP2/2N4P/1K1B4 b - g3 0 1');}
+  else {board = fenToArray('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');}
   addPiecesToHtml(board);
   addDragListeners();
 }
@@ -21,9 +31,11 @@ function createCircle() {
 }
 
 function addDragListeners() {
+  controller = new AbortController();
+  let { signal } = controller;
   let pieces = document.getElementsByClassName('piece');
   for (let i = 0; i < pieces.length; i++) {
-    pieces[i].addEventListener('mousedown', dragStart);
+    pieces[i].addEventListener('mousedown', dragStart, { signal });
   }
 }
 
@@ -134,11 +146,22 @@ function changeTurn(board, square, prevSquare, piece, pieceHtml) {
     rook.changePosition(positions['rookTargetSquare']);
   }
 
-  if (piece.type === 'pawn' && square.id === enPassantDummy) {
-    let passedSquare = [piece.row, piece.col - piece.direction]
-    document.getElementById(passedSquare.join('')).innerHTML = '';
-    board[passedSquare[0]][passedSquare[1]] = 0;    
+  if (piece.type === 'pawn') {
+    if (square.id === enPassantDummy) {
+      let passedSquare = [piece.row, piece.col - piece.direction]
+      document.getElementById(passedSquare.join('')).innerHTML = '';
+      board[passedSquare[0]][passedSquare[1]] = 0;    
+    };
+
+    if (Number(square.id[0]) === piece.promotionRow) {
+      square.innerHTML = ''
+      square.appendChild(pieceHtml);
+      square.appendChild(promoteButtons);
+      promotePawn(createClickListenerPromise(), piece, square, prevSquare.id);
+      return
+    }
   }
+
   if (piece.type === 'pawn' && Math.abs(Number(square.id[0]) - piece.row) > 1) {
     enPassantDummy = (piece.row + piece.direction).toString() + piece.col.toString();
   } else {
@@ -179,5 +202,48 @@ function checkGameOver() {
   }
   return 'stalemate';
 }
+
+async function promotePawn(clickListenerPromise, pawn, square, prevSquare) {
+  pawn.changePosition(square.id)
+  
+  controller.abort();
+  await clickListenerPromise;
+
+  clickListenerPromise.then((type) => {
+    board[pawn.row][pawn.col] = pawn.promote(type, board);
+  })
+
+  // adding 1 ms of delay because .then function is apparently slightly delayed
+  await new Promise(r => setTimeout(r, 1));
+  
+  board[Number(prevSquare[0])][Number(prevSquare[1])] = 0;
+  enPassantDummy = '-';
+
+  addPiecesToHtml(board);
+
+  activePlayer = changePlayers[activePlayer];
+  let gameOver = checkGameOver()
+  if (gameOver) {console.log(gameOver)}
+
+  addDragListeners();
+}
+
+function createClickListenerPromise() {
+  return new Promise(function (resolve) {
+    document.getElementById('promote-bishop').addEventListener('click', function selectPieceListener() {
+      resolve('b');
+    });
+    document.getElementById('promote-knight').addEventListener('click', function selectPieceListener() {
+      resolve('n');
+    });
+    document.getElementById('promote-rook').addEventListener('click', function selectPieceListener() {
+      resolve('r');
+    });
+    document.getElementById('promote-queen').addEventListener('click', function selectPieceListener() {
+      resolve('q');
+    });
+  })
+}
+
 
 setup();
