@@ -8,7 +8,7 @@ const castling = {
     'white': [],
     'black': [],
 };
-const aToG = 'abcdefg';
+const aToG = 'abcdefgh';
 let activePlayer = 'white';
 let enPassantDummy = '-';
 let halfMoves = 0;

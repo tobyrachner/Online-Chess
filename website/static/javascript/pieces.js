@@ -346,7 +346,7 @@ class Pawn extends Piece {
         }
     }
 
-    availSquares(getSquaresAttacking, board=this.board) {
+    availSquares(board=this.board) {
         let squares = [];
 
         if (board[this.row + this.direction][this.col] === 0) {
@@ -356,16 +356,12 @@ class Pawn extends Piece {
                 squares.push(squareArrayToString([this.row + this.direction * 2, this.col]));
             }
         }
-        if (validRange.includes(this.col + 1) && board[this.row + this.direction][this.col + 1] != 0 &&  board[this.row + this.direction][this.col + 1].color != this.color) {
+        if ((validRange.includes(this.col + 1) && board[this.row + this.direction][this.col + 1] != 0 && board[this.row + this.direction][this.col + 1].color != this.color) || (this.row + this.direction).toString() + (this.col + 1).toString() === enPassantDummy) {
             squares.push(squareArrayToString([[this.row + this.direction], [this.col + 1]]));
         }
-        if (validRange.includes(this.col - 1) && board[this.row + this.direction][this.col - 1] != 0 &&  board[this.row + this.direction][this.col - 1].color != this.color) {
+        if ((validRange.includes(this.col - 1) && board[this.row + this.direction][this.col - 1] != 0 &&  board[this.row + this.direction][this.col - 1].color != this.color) || (this.row + this.direction).toString() + (this.col - 1).toString() === enPassantDummy) {
             squares.push(squareArrayToString([[this.row + this.direction], [this.col - 1]]));
         } 
-
-        if (getSquaresAttacking) {
-            return squares;
-        }
 
         let returnSquares = [];
         for (let i = 0; i < squares.length; i++) {

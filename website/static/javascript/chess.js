@@ -134,6 +134,17 @@ function changeTurn(board, square, prevSquare, piece, pieceHtml) {
     rook.changePosition(positions['rookTargetSquare']);
   }
 
+  if (piece.type === 'pawn' && square.id === enPassantDummy) {
+    let passedSquare = [piece.row, piece.col - piece.direction]
+    document.getElementById(passedSquare.join('')).innerHTML = '';
+    board[passedSquare[0]][passedSquare[1]] = 0;    
+  }
+  if (piece.type === 'pawn' && Math.abs(Number(square.id[0]) - piece.row) > 1) {
+    enPassantDummy = (piece.row + piece.direction).toString() + piece.col.toString();
+  } else {
+    enPassantDummy = '-';
+  }
+
   square.innerHTML = '';
   square.appendChild(pieceHtml);    
   board[Number(square.id[0])][Number(square.id[1])] = piece;
