@@ -1,11 +1,19 @@
-let pieces = [];
-let activePlayer = 'white';
 const changePlayers = {
     'w': 'white',
     'b': 'black',
     'white': 'black',
     'black': 'white',
-}
+};
+const castling = {
+    'white': [],
+    'black': [],
+};
+const aToG = 'abcdefg';
+let activePlayer = 'white';
+let enPassantDummy = '-';
+let halfMoves = 0;
+let fullMove = 1;
+
 
 function CreatePieceObject()  {
     this.r = function (color, board, pos) { return new Rook(color, board, pos);};
@@ -36,15 +44,27 @@ function addPiecesToHtml(board) {
 
 
 function fenToArray(fen) {
-    fen = fen.split(' ');
-    const rows = fen[0].split('/');
-    activePlayer = changePlayers[fen[1]];
-    let board = [];
-
-
     // FEN example: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
     // more infos here: https://www.chess.com/terms/fen-chess
 
+    fen = fen.split(' ');
+    const rows = fen[0].split('/');
+    activePlayer = changePlayers[fen[1]];
+    halfMoves = Number(fen[4]);
+    fullMovements = Number(fen[5]);
+
+    if (fen[3] === '-') {enPassantDummy = '-';}
+    else {enPassantDummy = (8 - Number(fen[3][1])).toString() + aToG.indexOf(fen[3][0]).toString();};
+
+    for (let i = 0; i < fen[2].length; i++) {
+        let character = fen[2][i];
+        if (character === '-') {continue}
+        if (character === character.toUpperCase()) {castling['white'].push(character.toLowerCase());}
+        if (character === character.toLowerCase()) {castling['black'].push(character);}
+    }
+    
+
+    let board = [];
 
     for (let i = 0; i < rows.length; i++) {
         let row = [];
@@ -64,7 +84,6 @@ function fenToArray(fen) {
                 if (character === character.toLowerCase()) {color = 'black'}
                 let piece = createPieces[character.toLowerCase()](color, board, i.toString() + currColumn.toString());
                 row.push(piece);
-                pieces.push(piece);
 
                 if (piece.type === 'king') {
                     kings[piece.color] = piece;
@@ -79,18 +98,15 @@ function fenToArray(fen) {
 }
 
 
-function generateFEN(board) {
-    let fen = '';
+function generateFEN() {
+    let fen = [];
+
+    let boardPosition = '';
     let zeroCount = 0
 
-
     for (let row = 0; row < board.length; row++) {
-        if (!(fen == '')) {fen += '/';}
-
-
-        if (zeroCount) {fen += zeroCount.toString();}
+        if (!(boardPosition == '')) {boardPosition += '/';}
         zeroCount = 0
-
 
         for (let i = 0; i < board[row].length; i++) {
             let obj = board[row][i];
@@ -100,7 +116,7 @@ function generateFEN(board) {
                 zeroCount += 1;
             } else {
                 if (zeroCount) {
-                    fen += zeroCount.toString();
+                    boardPosition += zeroCount.toString();
                     zeroCount = 0;
                 }
 
@@ -109,9 +125,23 @@ function generateFEN(board) {
                 if (obj.color === 'white') {
                     letter = letter.toUpperCase()
                 }
-                fen += letter;
+                boardPosition += letter;
             }
         }
+        if (zeroCount) {boardPosition += zeroCount.toString();}
     }
-    return fen;
+
+    let castleMoves = '';
+    for (let i = 0; i < castling['white'].length; i++) {castleMoves += castling['white'][i].toUpperCase();} 
+    for (let i = 0; i < castling['black'].length; i++) {castleMoves += castling['black'][i];}
+    if (castleMoves === '') {
+        castleMoves = '-'
+    }
+
+    if (enPassantDummy != '-') {
+        enPassantDummy = aToG[Number(enPassantDummy[1])] + (8 - Number(enPassantDummy[0])).toString();
+    }
+
+    fen.push(boardPosition, activePlayer[0], castleMoves, enPassantDummy, halfMoves.toString(), fullMove.toString());
+    return fen.join(' ');
 }

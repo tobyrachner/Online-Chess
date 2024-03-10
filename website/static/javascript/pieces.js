@@ -5,6 +5,7 @@ const knightOffsets = [[-2, 1], [-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, 
 const kingOffsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
 let kings = {};
+let castlingSquares = {};
 
 function allSquares() {
     let squares = [];
@@ -286,12 +287,36 @@ class King extends Piece {
             testBoard.push([...this.board[i]]);
         }
         testBoard[this.row][this.col] = 0;
+
+        // making sure the king can't walk into check
         let returnSquares = [];
         for (let i = 0; i < squares.length; i++) {
             if (!this.isAttacked(testBoard, squares[i])) {
                 returnSquares.push(squares[i]);
             }
-        }  return returnSquares
+        }  
+        
+        // adding castling
+        if (castling[this.color].length > 0 && !this.isAttacked()) {
+            let row = this.row.toString();
+            if (castling[this.color].includes('k') && board[this.row][5] === 0 && board[this.row][6] === 0) {
+                if (!this.isAttacked(this.board, row + '5') && !this.isAttacked(this.board, row + '6')) {
+                    returnSquares.push(row + '6', row + '7')
+                    castlingSquares[row + '6'] = {'kingSquare': row + '6', 'rook': row + '7', 'rookTargetSquare': row + '5'};
+                    castlingSquares[row + '7'] = {'kingSquare': row + '6', 'rook': row + '7', 'rookTargetSquare': row + '5'};
+                }
+            }
+
+            if (castling[this.color].includes('q') && board[this.row][1] === 0 && board[this.row][2] === 0 && board[this.row][3] === 0) {
+                if (!this.isAttacked(this.board, row + '3') && !this.isAttacked(this.board, row + '2')) {
+                    returnSquares.push(row + '2', row + '0')
+                    castlingSquares[row + '2'] = {'kingSquare': row + '2', 'rook': row + '0', 'rookTargetSquare': row + '3'};
+                    castlingSquares[row + '0'] = {'kingSquare': row + '2', 'rook': row + '0', 'rookTargetSquare': row + '3'};
+                }
+            }
+        }
+        
+        return returnSquares
     }
 
     squaresAttacking() {

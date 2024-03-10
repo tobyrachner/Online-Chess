@@ -7,8 +7,9 @@ let emptyAvailSquares = [];
 let cOffX = 0;
 let cOffY = 0;
 
-function testSetup() {
-  board = fenToArray('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+function setup(fen) {
+  if (fen) {board = fenToArray(fen);}
+  else {board = fenToArray('2k2r2/2q5/p1p1r3/1p6/6Pp/4NP2/2N4P/1K1B4 b - g3 0 1');}
   addPiecesToHtml(board);
   addDragListeners();
 }
@@ -96,7 +97,7 @@ function dragEnd(e) {
   }
 
   if (square.classList.contains('square') && availSquares.includes(square.id)) {
-    movePiece(board, square, prevSquare, piece, pieceHtml)
+    changeTurn(board, square, prevSquare, piece, pieceHtml)
   }
 
   piece = undefined;
@@ -105,12 +106,40 @@ function dragEnd(e) {
   emptyAvailSquares = [];
 }
 
-function movePiece(board, square, prevSquare, piece, pieceHtml) {
+function changeTurn(board, square, prevSquare, piece, pieceHtml) {
+  if (activePlayer === 'black') {fullMove++;}
+
+  halfMoves++;
+  if (piece.type === 'pawn' || square.hasChildNodes()) {halfMoves = 0;}
+
+  if (piece.type === 'king') {
+    castling[piece.color] = [];
+  }
+  if (piece.type === 'rook') {
+    if (piece.col == '0') {castling[piece.color].splice(castling[piece.color].indexOf('q'), 1);}
+    if (piece.col == '7') {castling[piece.color].splice(castling[piece.color].indexOf('k'), 1);}
+  }
+
+  if (square.id in castlingSquares) {
+    let positions = castlingSquares[square.id]
+    square = document.getElementById(positions['kingSquare']);
+    let rook = board[Number(positions['rook'][0])][Number(positions['rook'][1])];
+    let rookSquare = document.getElementById(positions['rook'])
+    let rookHtml = rookSquare.childNodes[0];
+
+    rookSquare.innerHTML = '';
+    document.getElementById(positions['rookTargetSquare']).appendChild(rookHtml);
+    board[rook.row][rook.col] = 0;
+    board[Number(positions['rookTargetSquare'][0])][Number(positions['rookTargetSquare'][1])] = rook;
+    rook.changePosition(positions['rookTargetSquare']);
+  }
+
   square.innerHTML = '';
   square.appendChild(pieceHtml);    
   board[Number(square.id[0])][Number(square.id[1])] = piece;
   board[Number(prevSquare.id[0])][Number(prevSquare.id[1])] = 0;
   piece.changePosition(square.id)
+
 
   activePlayer = changePlayers[activePlayer];
   let gameOver = checkGameOver()
@@ -118,6 +147,16 @@ function movePiece(board, square, prevSquare, piece, pieceHtml) {
 }
 
 function checkGameOver() {
+  if (halfMoves > 99) {return '50 moves'}
+
+  let pieces = [];
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (board[i][j] != 0) {pieces.push(board[i][j]);
+      }
+    }
+  }
+
   for (let i = 0; i < pieces.length; i++) {
     let piece = pieces[i];
     if (piece.color === activePlayer && piece.availSquares().length > 0) {
@@ -130,4 +169,4 @@ function checkGameOver() {
   return 'stalemate';
 }
 
-testSetup();
+setup();
