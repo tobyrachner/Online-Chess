@@ -1,3 +1,6 @@
+const boardSize = 8;
+const validRange = [...Array(boardSize).keys()]
+
 const changePlayers = {
     'w': 'white',
     'b': 'black',
@@ -25,87 +28,37 @@ function CreatePieceObject()  {
 }
 const createPieces = new CreatePieceObject();
 
-function generateEmptyBoard() {
-    document.getElementById('board').innerHTML = `<div class="square white" id="00"></div>
-    <div class="square black" id="01"></div>
-    <div class="square white" id="02"></div>
-    <div class="square black" id="03"></div>
-    <div class="square white" id="04"></div>
-    <div class="square black" id="05"></div>
-    <div class="square white" id="06"></div>
-    <div class="square black" id="07"></div>
+function generateEmptyBoard(flip) {
 
-    <div class="square black" id="10"></div>
-    <div class="square white" id="11"></div>
-    <div class="square black" id="12"></div>
-    <div class="square white" id="13"></div>
-    <div class="square black" id="14"></div>
-    <div class="square white" id="15"></div>
-    <div class="square black" id="16"></div>
-    <div class="square white" id="17"></div>
-   
-    <div class="square white" id="20"></div>
-    <div class="square black" id="21"></div>
-    <div class="square white" id="22"></div>
-    <div class="square black" id="23"></div>
-    <div class="square white" id="24"></div>
-    <div class="square black" id="25"></div>
-    <div class="square white" id="26"></div>
-    <div class="square black" id="27"></div>
+    let boardHtml = document.getElementById('board');
+    boardHtml.innerHTML = ''; 
 
-    <div class="square black" id="30"></div>
-    <div class="square white" id="31"></div>
-    <div class="square black" id="32"></div>
-    <div class="square white" id="33"></div>
-    <div class="square black" id="34"></div>
-    <div class="square white" id="35"></div>
-    <div class="square black" id="36"></div>
-    <div class="square white" id="37"></div>
-   
-    <div class="square white" id="40"></div>
-    <div class="square black" id="41"></div>
-    <div class="square white" id="42"></div>
-    <div class="square black" id="43"></div>
-    <div class="square white" id="44"></div>
-    <div class="square black" id="45"></div>
-    <div class="square white" id="46"></div>
-    <div class="square black" id="47"></div>
+    let color = 'white';
+    let row = '0';
+    let col = '0';
 
-    <div class="square black" id="50"></div>
-    <div class="square white" id="51"></div>
-    <div class="square black" id="52"></div>
-    <div class="square white" id="53"></div>
-    <div class="square black" id="54"></div>
-    <div class="square white" id="55"></div>
-    <div class="square black" id="56"></div>
-    <div class="square white" id="57"></div>
-   
-    <div class="square white" id="60"></div>
-    <div class="square black" id="61"></div>
-    <div class="square white" id="62"></div>
-    <div class="square black" id="63"></div>
-    <div class="square white" id="64"></div>
-    <div class="square black" id="65"></div>
-    <div class="square white" id="66"></div>
-    <div class="square black" id="67"></div>
+    for (let i = 0; i < boardSize; i++) {
+        row = i.toString()
+        if (flip) {row = (7 - i).toString()};
 
-    <div class="square black" id="70"></div>
-    <div class="square white" id="71"></div>
-    <div class="square black" id="72"></div>
-    <div class="square white" id="73"></div>
-    <div class="square black" id="74"></div>
-    <div class="square white" id="75"></div>
-    <div class="square black" id="76"></div>
-    <div class="square white" id="77"></div>`;
+        for (let j = 0; j < boardSize; j++) {
+            col = j.toString()
+            if (flip) {col = (7 - j).toString()};
+
+            color = 'white'
+            if ((i + j) % 2 === 1) {color = 'black'};
+            boardHtml.innerHTML += `<div class="square ${color}" id="${row + col}"></div>`;
+        }
+    }
 }
 
-function addPiecesToHtml(board) {
+function addPiecesToHtml(board, flip) {
     let addPiece = function (type, color, pos) {
         let square = document.getElementById(pos);
         square.innerHTML = `<img src="http://127.0.0.1:5000/pieces/${color + '_' + type}" class="piece"></img>`;
     }
 
-    generateEmptyBoard();
+    generateEmptyBoard(flip);
    
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {

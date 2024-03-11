@@ -17,10 +17,10 @@ let emptyAvailSquares = [];
 let cOffX = 0;
 let cOffY = 0;
 
-function setup(fen) {
+function setup(fen, flip) {
   if (fen) {board = fenToArray(fen);}
   else {board = fenToArray('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');}
-  addPiecesToHtml(board);
+  addPiecesToHtml(board, flip);
   addDragListeners();
 }
 
@@ -148,7 +148,7 @@ function changeTurn(board, square, prevSquare, piece, pieceHtml) {
 
   if (piece.type === 'pawn') {
     if (square.id === enPassantDummy) {
-      let passedSquare = [piece.row, piece.col - piece.direction]
+      let passedSquare = [piece.row, Number(square.id[1])];
       document.getElementById(passedSquare.join('')).innerHTML = '';
       board[passedSquare[0]][passedSquare[1]] = 0;    
     };
