@@ -178,6 +178,15 @@ function changeTurn(board, square, prevSquare, piece, pieceHtml) {
   activePlayer = changePlayers[activePlayer];
   let gameOver = checkGameOver()
   if (gameOver) {console.log(gameOver)}
+
+  sendMove();
+}
+
+function sendMove() {
+  $.post('/play_move', {
+    fen: generateFEN(),
+    gameOver: checkGameOver()
+  })
 }
 
 function checkGameOver() {
@@ -194,7 +203,7 @@ function checkGameOver() {
   for (let i = 0; i < pieces.length; i++) {
     let piece = pieces[i];
     if (piece.color === activePlayer && piece.availSquares().length > 0) {
-      return false;
+      return '';
     }
   }
   if (kings[activePlayer].isAttacked()) {
@@ -224,6 +233,8 @@ async function promotePawn(clickListenerPromise, pawn, square, prevSquare) {
   activePlayer = changePlayers[activePlayer];
   let gameOver = checkGameOver()
   if (gameOver) {console.log(gameOver)}
+
+  sendMove();
 
   addDragListeners();
 }
