@@ -17,6 +17,8 @@ let emptyAvailSquares = [];
 let cOffX = 0;
 let cOffY = 0;
 
+let playingAs = 'white';
+
 function setup(fen, flip) {
   if (fen) {board = fenToArray(fen);}
   else {board = fenToArray('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');}
@@ -47,7 +49,7 @@ function dragStart(e) {
   let square = pieceHtml.parentElement.id
   piece = board[Number(square[0])][Number(square[1])];
 
-  if (piece.color != activePlayer) {
+  if (piece.color != activePlayer || activePlayer != playingAs) {
     return
   }
 
@@ -182,12 +184,7 @@ function changeTurn(board, square, prevSquare, piece, pieceHtml) {
   sendMove();
 }
 
-function sendMove() {
-  $.post('/play_move', {
-    fen: generateFEN(),
-    gameOver: checkGameOver()
-  })
-}
+
 
 function checkGameOver() {
   if (halfMoves > 99) {return '50 moves'}
@@ -256,5 +253,21 @@ function createClickListenerPromise() {
   })
 }
 
+function sendMove() {
+  console.log('sending')
+  socket.emit('send_move', {
+      fen: generateFEN(),
+      gameOver: checkGameOver(),
+      room: 'test_room'
+  })
+}
+
+
+socket.on('move_played', function(data) {
+  board = fenToArray(data.fen);
+  addPiecesToHtml(board, false);
+  addDragListeners();
+  console.log('Gameover: ' + data.gameOver)
+})
 
 setup();
