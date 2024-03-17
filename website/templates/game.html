@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Chess.org{% endblock %}
+{% block metas %}
+  <meta id="room-id" data-id="{{ id }}">
+  <meta id="is-online" data-online="True">
+{% endblock %}
+{% block links %}
+<link rel="stylesheet" href="../static/styles/base.css">
+<link rel="stylesheet" href="../static/styles/home.css">
+{% endblock %}
+{% block content %}
+<div class="home-content">
+  <div class="board" id="board"></div>
+</div>
+{% endblock %}
+{% block extrasScripts %}
+<script src="../static/javascript/online.js"></script>
+</script>
+{% endblock %}

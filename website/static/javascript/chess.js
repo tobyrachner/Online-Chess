@@ -1,6 +1,8 @@
 let controller = new AbortController();;
 let { signal } = controller;
 
+let socket = io()
+
 const promoteButtons = document.createElement('div');
 promoteButtons.className = 'promote-buttons';
 promoteButtons.innerHTML = `<img class="promote-button" id="promote-bishop" src="http://127.0.0.1:5000/pieces/white_bishop">
@@ -17,7 +19,7 @@ let emptyAvailSquares = [];
 let cOffX = 0;
 let cOffY = 0;
 
-let playingAs = 'white';
+let playingAs = 'both';
 
 function setup(fen, flip) {
   if (fen) {board = fenToArray(fen);}
@@ -49,7 +51,7 @@ function dragStart(e) {
   let square = pieceHtml.parentElement.id
   piece = board[Number(square[0])][Number(square[1])];
 
-  if (piece.color != activePlayer || activePlayer != playingAs) {
+  if (piece.color != activePlayer || (activePlayer != playingAs && playingAs != 'both')) {
     return
   }
 
@@ -254,11 +256,15 @@ function createClickListenerPromise() {
 }
 
 function sendMove() {
-  console.log('sending')
+  let online = document.getElementById('is-online').dataset.online;
+  if (!online) {return}
+  // preventing tries to send moves of home screen analysis board to backend
+  // is set to undefined in home.html
+  
   socket.emit('send_move', {
       fen: generateFEN(),
       gameOver: checkGameOver(),
-      room: 'test_room'
+      room: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
   })
 }
 

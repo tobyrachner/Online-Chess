@@ -17,6 +17,7 @@ let enPassantDummy = '-';
 let halfMoves = 0;
 let fullMove = 1;
 
+let boardFlipped = false;
 
 function CreatePieceObject()  {
     this.r = function (color, board, pos) { return new Rook(color, board, pos);};
@@ -53,6 +54,8 @@ function generateEmptyBoard(flip) {
 }
 
 function addPiecesToHtml(board, flip) {
+    if (!flip) {flip = boardFlipped}
+
     let addPiece = function (type, color, pos) {
         let square = document.getElementById(pos);
         square.innerHTML = `<img src="http://127.0.0.1:5000/pieces/${color + '_' + type}" class="piece"></img>`;
@@ -172,4 +175,10 @@ function generateFEN() {
 
     fen.push(boardPosition, activePlayer[0], castleMoves, enPassantDummy, halfMoves.toString(), fullMove.toString());
     return fen.join(' ');
+}
+
+function flipBoard() {
+    boardFlipped = !boardFlipped;
+    addPiecesToHtml(board, boardFlipped)
+    addDragListeners()
 }
