@@ -1,5 +1,6 @@
 let room = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
 let user = document.getElementById('jinjaData').dataset.user;
+if (Array.from(user)[0] === '<') {user = 'Anonymous'};
 
 function join(room, username) {
     if (!room) {room = document.getElementById('room-id').dataset.id;}
@@ -12,12 +13,6 @@ socket.on('joined', function(data) {
     console.log('joined game room')
     console.log
     setup(data['fen'])
-})
-
-window.addEventListener('beforeunload', function(event) {
-    event.preventDefault();
-    console.log('beforeunload')
-    socket.emit('client_disconnecting', {room: room, user: user})
 })
 
 join(room, user);

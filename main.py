@@ -6,20 +6,35 @@ from website.models import Game
 app = create_app()
 socketio = SocketIO(app)
 
+users = {}
+rooms = {} # keeping track of client count for each room
+
 @socketio.on('connected')
 def user_connected(data):
     print('Received message:', data['data'])
     emit('return', 'Received message: ' + data['data'])
 
-@socketio.on('client_disconnecting')
-def disconnecting(data):
-    print(data['user'] + ' disconnected')
-    print(request)
+@socketio.on('disconnect')
+def disconnecting():
+    user, room = users[request.sid]
+    rooms[room] -= 1
+    
+    if rooms[room] == 0:
+        Game.query.filter_by(name=room).delete()
+        db.session.commit()
 
 @socketio.on('join')
 def on_join(data):
     username = data['username']
     room = data['room']
+
+    users[request.sid] = [username, room]
+    
+    if room in rooms: 
+        rooms[room] += 1
+    else:
+        rooms[room] = 1
+
     join_room(room)
     emit('return', username + ' has joined the room.', to=room)
     emit('joined', {'fen': Game.query.filter_by(name=room).first().fen})
