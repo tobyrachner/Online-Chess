@@ -5,15 +5,33 @@
 <link rel="stylesheet" href="../static/styles/home.css">
 {% endblock %}
 {% block content %}
-<div class="popup-form">
-  <h2>Create Room</h2>
-  <form id="create-room">
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" class="popup-input" placeholder="Enter room name ...">
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" class="popup-input" placeholder="Enter room password ...">
-    <button type="button" class="submit-button" onclick="createRoom()">Create</button>
-  </form>
+<div class="popup-background" id="create-popup">
+  <div class="popup">
+    <div class="close-btn" onclick="document.querySelector('#create-popup').style['display'] = 'none'">&times;</div>
+    <h2>Create Room</h2>
+    <form id="create-room">
+      <label for="create-name">Name</label>
+      <input type="text" name="name" id="create-name" placeholder="Enter room name ...">
+      <label for="create-password">Password</label>
+      <input type="password" name="password" id="create-password" placeholder="Enter room password ...">
+      <button type="button" onclick="createRoom(this.parentElement)">Create</button>
+    </form>
+  </div>
+</div>
+<div class="popup-background" id="join-popup">
+  <div class="popup">
+    <div class="close-btn" onclick="document.querySelector('#join-popup').style['display'] = 'none'">&times;</div>
+    <h2>Join Room</h2>
+    <form id="join-room">
+      <label for="join-name">Name</label>
+      <input type="text" name="name" id="join-name" placeholder="Enter room name ...">
+      <label for="join-password">Password</label>
+      <input type="password" name="password" id="join-password" placeholder="Enter room password ...">
+      <input type="checkbox" name="spectate" id="join-spectate">
+      <label for="join-spectate">Or just spectate</label>
+      <button type="button" onclick="joinRoom(this.parentElement)">Join</button>
+    </form>
+  </div>
 </div>
 
 <div class="home-content">
@@ -98,8 +116,8 @@
 </div>
   <div class="play-buttons">
     <button class="play-button" id="challenge">Challenge a Friend</button>
-    <button class="play-button" id="join-room">Join Room</button>
-    <button class="play-button" id="create-room">Create Room</button>
+    <button class="play-button" id="join-room" onclick="document.querySelector('#join-popup').style['display'] = 'initial'">Join Room</button>
+    <button class="play-button" id="create-room" onclick="document.querySelector('#create-popup').style['display'] = 'initial'">Create Room</button>
   </div>
 </div>
 {% endblock %}

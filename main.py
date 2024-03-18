@@ -16,12 +16,14 @@ def user_connected(data):
 
 @socketio.on('disconnect')
 def disconnecting():
-    user, room = users[request.sid]
-    rooms[room] -= 1
-    
-    if rooms[room] == 0:
-        Game.query.filter_by(name=room).delete()
-        db.session.commit()
+    if request.sid in users:
+        print(users)
+        user, room = users[request.sid]
+        rooms[room] -= 1
+        
+        if rooms[room] == 0:
+            Game.query.filter_by(name=room).delete()
+            db.session.commit()
 
 @socketio.on('join')
 def on_join(data):

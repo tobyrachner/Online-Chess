@@ -95,7 +95,7 @@ header {
     z-index: 1;
 }
 .piece.dragging {
-    z-index: 20;
+    z-index: 3;
 }
 
 
@@ -104,7 +104,7 @@ header {
     aspect-ratio: 1 / 1;
     position: absolute;
     left: 25px;
-    z-index: 7;
+    z-index: 3;
 }
 #promote-bishop {
     top: -60px;
