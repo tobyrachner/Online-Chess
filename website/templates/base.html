@@ -30,6 +30,7 @@
     <div class="header-group" id="right">
       {% if user.is_authenticated %}
       <a class="header-button" href="{{ url_for('auth.logout') }}">Logout</a>
+      <a class="header-button" href="">{{ user.username }}</a>
       {% else %}
       <a class="header-button" href="{{ url_for('auth.login') }}">Login</a>
       <a class="header-button" href="{{ url_for('auth.sign_up') }}">Sign up</a>

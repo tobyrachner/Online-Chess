@@ -20,7 +20,7 @@
     z-index: 10;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, calc(-50% - 50px));
+    transform: translate(-50%, calc(-50% - 25px));
     padding: 20px 30px;
     width: 380px;
     border-radius: 10px;

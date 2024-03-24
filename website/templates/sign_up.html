@@ -5,14 +5,20 @@
 <link rel="stylesheet" href="../static/styles/auth.css">
 {% endblock %}
 {% block content %}
-<h1>Sign Up</h1>
-<form method="POST">
-  <fieldset>
-    <label for="email">E-mail: <br><input id="email" name="email" type="email" class="email" required></label>
-    <label for="username">Username: <br><input id="username" name="username" type="text" class="username" required></label>
-    <label for="password1">Password: <br><input id="password1" name="password1" type="password" required></label>
-    <label for="password2">Confirm Password: <br><input id="password2" name="password2" type="password" required></label>
-    <button type="submit" class="submit">Login</button>
-  </fieldset>
-</form>
+<div class="container">
+  <h2>Sign Up</h2>
+  <form method="POST">
+    <fieldset>
+      <label for="email">E-mail:</label>
+      <input id="email" name="email" type="email" class="email" required>
+      <label for="username">Username:</label>
+      <input id="username" name="username" type="text" class="username" required>
+      <label for="password1">Password:</label>
+      <input id="password1" name="password1" type="password" required>
+      <label for="password2">Confirm Password:</label>
+      <input id="password2" name="password2" type="password" required>
+      <button type="submit" class="submit">Login</button>
+    </fieldset>
+  </form>
+</div>
 {% endblock %}
