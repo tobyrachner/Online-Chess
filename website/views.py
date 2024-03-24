@@ -32,6 +32,8 @@ def join_game():
     game = Game.query.filter_by(name=request.form['name']).first()
     locked = True
 
+    print(request.form['password'], game.password)
+
     if not game:
         flash('Room not found', category='error')
         return "Room not found", 400
@@ -42,12 +44,17 @@ def join_game():
     elif request.form['spectate'] == 'false':
         flash ('Incorrect password', category='error')
         return "Incorrect password", 400
-    
-    return {"name": game.name, "locked": locked}
+    print('join ', locked)
+    return str(locked)
 
 @views.route('/game/<id>')
 def game_room(id):
-    return render_template('game.html', user=current_user, online=True, id=id)
+    locked = True
+    passed = request.args.get('locked')
+    if passed:
+        locked = passed
+    print('game ', locked)
+    return render_template('game.html', user=current_user, online=True, id=id, locked=locked)
 
 @views.route('/pieces/<piece>')
 def get_piece_image(piece):

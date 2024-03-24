@@ -4,7 +4,7 @@ function createRoom(form) {
     
     $.post('/create_game', {name: name, password: password}).done(
         (response) => {
-            window.location.href = '/game/' + name;
+            window.location.href = '/game/' + name + '?locked=False';
         }
     )
 }
@@ -18,7 +18,7 @@ function joinRoom(form) {
     $.post('/join_game', {name: name, password: password, spectate: spectate}).done(
         (response) => {
             console.log(response.locked)
-            window.location.href = '/game/' + name;
+            window.location.href = '/game/' + name + '?locked=' + response;
         }
     )
 }

@@ -256,7 +256,7 @@ function createClickListenerPromise() {
 }
 
 function sendMove() {
-  let online = document.getElementById('is-online').dataset.online;
+  let online = document.getElementById('online').dataset.online;
   if (!online) {return}
   // preventing tries to send moves of home screen analysis board to backend
   // is set to undefined in home.html
@@ -264,7 +264,7 @@ function sendMove() {
   socket.emit('send_move', {
       fen: generateFEN(),
       gameOver: checkGameOver(),
-      room: window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+      room: window.location.href.substring(window.location.href.lastIndexOf('/') + 1, window.location.href.lastIndexOf('?'))
   })
 }
 

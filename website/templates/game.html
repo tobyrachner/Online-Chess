@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Chess.org{% endblock %}
 {% block metas %}
-  <meta id="room-id" data-id="{{ id }}">
-  <meta id="is-online" data-online="True">
+  <meta id="online" data-online="True" data-locked="{{ locked }}">
 {% endblock %}
 {% block links %}
 <link rel="stylesheet" href="../static/styles/base.css">
@@ -12,8 +11,11 @@
 <div class="home-content">
   <div class="board" id="board"></div>
 </div>
+<div class="play-as">
+  <button id="playing-as-white" data-color="white" onclick="playAs(this.dataset.color)">Play as White</button>
+  <button id="playing-as-black" data-color="black" onclick="playAs(this.dataset.color)">Play as Black</button>
+</div>
 {% endblock %}
 {% block extrasScripts %}
 <script src="../static/javascript/online.js"></script>
-</script>
 {% endblock %}

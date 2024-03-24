@@ -48,5 +48,23 @@ def play_move(data):
     db.session.commit()
     socketio.emit('move_played', data, to=data['room'])
 
+@socketio.on('play_as')
+def play_as(data):
+    game = Game.query.filter_by(name=data['room']).first()
+
+    if data['color'] == 'white':
+        if game.white:
+            return 'Color already taken', 400
+        game.white = request.sid
+
+    elif data['color'] == 'black':
+        if game.black:
+            return 'Color already taken', 400
+        game.black = request.sid
+
+    db.session.commit()
+    socketio.emit('color_successful', data['color'], to=request.sid)
+    socketio.emit('color_taken', {'color': data['color'],'user': users[request.sid][0]}, to=data['room'])
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)
