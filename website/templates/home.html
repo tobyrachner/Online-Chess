@@ -11,9 +11,9 @@
     <h2>Create Room</h2>
     <form id="create-room">
       <label for="create-name">Name</label>
-      <input type="text" name="name" id="create-name" placeholder="Enter room name ...">
+      <input type="text" class="enter-submit" name="name" id="create-name" placeholder="Enter room name ...">
       <label for="create-password">Password</label>
-      <input type="password" name="password" id="create-password" placeholder="Enter room password ...">
+      <input type="password" class="enter-submit" name="password" id="create-password" placeholder="Enter room password ...">
       <button type="button" onclick="createRoom(this.parentElement)">Create</button>
     </form>
   </div>
@@ -24,9 +24,9 @@
     <h2>Join Room</h2>
     <form id="join-room">
       <label for="join-name">Name</label>
-      <input type="text" name="name" id="join-name" placeholder="Enter room name ...">
+      <input type="text" class="enter-submit" name="name" id="join-name" placeholder="Enter room name ...">
       <label for="join-password">Password</label>
-      <input type="password" name="password" id="join-password" placeholder="Enter room password ...">
+      <input type="password" class="enter-submit" name="password" id="join-password" placeholder="Enter room password ...">
       <input type="checkbox" name="spectate" id="join-spectate">
       <label for="join-spectate">Or just spectate</label>
       <button type="button" onclick="joinRoom(this.parentElement)">Join</button>
@@ -38,7 +38,6 @@
   <div class="chat">
     <div class="chat-history"></div>
     <input type="text" class="chatbox" placeholder="Start typing..." id="chat-input">
-    <button data-link="{{ url_for('views.get_piece_image', piece='test') }}" onclick="dragPiece(this)" id="test-button">test</button>
   </div>
   <div class="board" id="board">
     <div class="square white" id="00"></div>

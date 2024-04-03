@@ -9,7 +9,14 @@
 {% endblock %}
 {% block content %}
 <div class="home-content">
+  <div class="chat">
+    <div class="chat-history"></div>
+    <input type="text" class="chatbox" placeholder="Start typing..." id="chat-input">
+  </div>
   <div class="board" id="board"></div>
+  <div class="info-box">
+    
+  </div>
 </div>
 <div class="play-as">
   <button id="playing-as-white" data-color="white" onclick="playAs(this.dataset.color)">Play as White</button>
