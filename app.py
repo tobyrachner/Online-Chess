@@ -7,7 +7,7 @@ app = create_app()
 socketio = SocketIO(app)
 
 users = {}
-rooms = {} # keeping track of client count for each room
+rooms = {} # keeping track of client count for each room #
 
 @socketio.on('connected')
 def user_connected(data):
