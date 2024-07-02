@@ -2,13 +2,15 @@ let controller = new AbortController();;
 let { signal } = controller;
 
 let socket = io()
-
-const promoteButtons = document.createElement('div');
-promoteButtons.className = 'promote-buttons';
-promoteButtons.innerHTML = `<img class="promote-button" id="promote-bishop" src="http://127.0.0.1:5000/pieces/white_bishop">
-<img class="promote-button" id="promote-knight" src="http://127.0.0.1:5000/pieces/white_night">
-<img class="promote-button" id="promote-rook" src="http://127.0.0.1:5000/pieces/white_rook">
-<img class="promote-button" id="promote-queen" src="http://127.0.0.1:5000/pieces/white_queen">`;
+function getPromoteButtons(color) {
+  let promoteButtons = document.createElement('div');
+  promoteButtons.className = 'promote-buttons';
+  promoteButtons.innerHTML = `<img class="w-[60%] aspect-square absolute -top-6 z-30 left-[-80px]" id="promote-bishop" src="http://127.0.0.1:5000/pieces/${color}_bishop">
+  <img class="w-[60%] aspect-square absolute -top-6 z-30 left-[-20px]" id="promote-knight" src="http://127.0.0.1:5000/pieces/${color}_night">
+  <img class="w-[60%] aspect-square absolute -top-6 z-30 left-[40px]" id="promote-rook" src="http://127.0.0.1:5000/pieces/${color}_rook">
+  <img class="w-[60%] aspect-square absolute -top-6 z-30 left-[100px]" id="promote-queen" src="http://127.0.0.1:5000/pieces/${color}_queen">`;
+  return promoteButtons;
+}
 
 let board = undefined;
 let piece = undefined;
@@ -30,7 +32,7 @@ function setup(fen, flip) {
 
 function createCircle() {
   let circle = document.createElement('div');
-  circle.className = 'availCircle';
+  circle.classList.add('w-[30%]', 'aspect-square', 'bg-[rgba(69,_102,_186,_0.8)]', 'rounded-full');
   return circle;
 }
 
@@ -73,7 +75,8 @@ function dragStart(e) {
   document.addEventListener('mousemove', dragMove);
   document.addEventListener('mouseup', dragEnd);
 
-  pieceHtml.classList.add('dragging');
+  pieceHtml.classList.toggle('z-10');
+  pieceHtml.classList.toggle('z-30');
 };
 
 function dragMove(e) {
@@ -103,7 +106,8 @@ function dragEnd(e) {
   document.removeEventListener('mousemove', dragMove);
   document.removeEventListener('mouseup', dragEnd);
 
-  pieceHtml.classList.remove('dragging');
+  pieceHtml.classList.toggle('z-10');
+  pieceHtml.classList.toggle('z-30');
   pieceHtml.style.top = null;
   pieceHtml.style.left = null;
 
@@ -160,7 +164,7 @@ function changeTurn(board, square, prevSquare, piece, pieceHtml) {
     if (Number(square.id[0]) === piece.promotionRow) {
       square.innerHTML = ''
       square.appendChild(pieceHtml);
-      square.appendChild(promoteButtons);
+      square.appendChild(getPromoteButtons(piece.color));
       promotePawn(createClickListenerPromise(), piece, square, prevSquare.id);
       return
     }
@@ -256,11 +260,13 @@ function createClickListenerPromise() {
 }
 
 function sendMove() {
-  let online = document.getElementById('online').dataset.online;
+  let online = document.getElementById('online');
   if (!online) {return}
   // preventing tries to send moves of home screen analysis board to backend
   // is set to undefined in home.html
   
+  online = online.dataset.online
+
   socket.emit('send_move', {
       fen: generateFEN(),
       gameOver: checkGameOver(),

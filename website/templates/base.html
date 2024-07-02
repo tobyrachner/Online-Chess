@@ -16,24 +16,25 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="../static/styles/styles.css">
   {% block links %}
   <link rel="stylesheet" href="../static/styles/base.css">
   {% endblock %}
   <title>{% block title %}Home{% endblock %}</title>
 </head>
-<body>
-  <header>
-    <div class="header-group" id="left">
-      <a class="header-button" href="{{ url_for('views.home') }}">Chess.org</a>
-      <a class="header-button" href="">Active Games</a>
+<body class="m-0 bg-slate-100">
+  <header class="w-full bg-zinc-500 flex justify-between h-14 py-1 px-6">
+    <div class="flex justify-between items-center h-full text-xl my-0 mx-1" id="left">
+      <a class="text-white no-underline my-0 mx-3 hover:text-gray-200" href="{{ url_for('views.home') }}">Chess.org</a>
+      <a class="text-white no-underline my-0 mx-3 hover:text-gray-200" href="">Active Games</a>
     </div>
-    <div class="header-group" id="right">
+    <div class="flex justify-between items-center h-full text-xl my-0 ml-1 mr-3" id="right">
       {% if user.is_authenticated %}
-      <a class="header-button" href="{{ url_for('auth.logout') }}">Logout</a>
-      <a class="header-button" href="">{{ user.username }}</a>
+      <a class="text-white no-underline my-0 mx-3 hover:text-gray-200" href="{{ url_for('auth.logout') }}">Logout</a>
+      <a class="text-white no-underline my-0 mx-3 hover:text-gray-200" href="">{{ user.username }}</a>
       {% else %}
-      <a class="header-button" href="{{ url_for('auth.login') }}">Login</a>
-      <a class="header-button" href="{{ url_for('auth.sign_up') }}">Sign up</a>
+      <a class="text-white no-underline my-0 mx-3 hover:text-gray-200" href="{{ url_for('auth.login') }}">Login</a>
+      <a class="text-white no-underline my-0 mx-3 hover:text-gray-200" href="{{ url_for('auth.sign_up') }}">Sign up</a>
       {% endif %}
     </div>
   </header>
@@ -41,14 +42,14 @@
   {% if messages %} 
     {% for category, message in messages %} 
       {% if category ==  'error' %}
-        <div class="alert alert-danger alter-dismissable fade show" role="alert">
+        <div class="alert alert-danger alert-dismissable fade show absolute" role="alert">
           {{ message }}
           <button type="button" class="close" data-dismiss="alert">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         {% else %}
-        <div class="alert alert-success alter-dismissable fade show" role="alert">
+        <div class="alert alert-success alert-dismissable fade show absolute" role="alert">
           {{ message }}
           <button type="button" class="close" data-dismiss="alert">
             <span aria-hidden="true">&times;</span>

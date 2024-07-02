@@ -5,118 +5,45 @@
 <link rel="stylesheet" href="../static/styles/home.css">
 {% endblock %}
 {% block content %}
-<div class="popup-background" id="create-popup">
-  <div class="popup">
-    <div class="close-btn" onclick="document.querySelector('#create-popup').style['display'] = 'none'">&times;</div>
-    <h2>Create Room</h2>
+<div class="hidden absolute z-50 w-full h-[calc(100%_-_50px)] bg-[rgba(0,_0,_0,_0.4)]" id="create-popup">
+  <div class="popup block bg-gray-100 absolute z-[60] top-1/2 left-1/2 -translate-x-1/2 translate-y-[calc(-50%_-_25px)] py-4 px-7 rounded-xl w-[380px]">
+    <div class="absolute top-[5px] right-[15px] h-[15px] cursor-pointer text-2xl" onclick="document.querySelector('#create-popup').style['display'] = 'none'">&times;</div>
+    <h2 class="text-center text-[1.8em] mb-2">Create Room</h2>
     <form id="create-room">
-      <label for="create-name">Name</label>
-      <input type="text" class="enter-submit" name="name" id="create-name" placeholder="Enter room name ...">
-      <label for="create-password">Password</label>
-      <input type="password" class="enter-submit" name="password" id="create-password" placeholder="Enter room password ...">
-      <button type="button" onclick="createRoom(this.parentElement)">Create</button>
+      <label class="text[1.2em]" for="create-name">Name</label>
+      <input type="text" class="enter-submit block w-full p-2 mb-[10px] outline-none rounded border-[1.5px] border-gray-400" name="name" id="create-name" placeholder="Enter room name ...">
+      <label class="text[1.2em]" for="create-password">Password</label>
+      <input type="password" class="enter-submit block w-full p-2 mb-[10px] outline-none rounded border-[1.5px] border-gray-400" name="password" id="create-password" placeholder="Enter room password ...">
+      <button type="button" class="w-full h-10 border-none outline-none rounded text-gray-100 mt-2 bg-[hsl(0,_0%,_10%)] hover:bg-[hsl(0,_0%,_15%)] active:bg-[hsl(0,_0%,_20%)]" onclick="createRoom(this.parentElement)">Create</button>
     </form>
   </div>
 </div>
-<div class="popup-background" id="join-popup">
-  <div class="popup">
-    <div class="close-btn" onclick="document.querySelector('#join-popup').style['display'] = 'none'">&times;</div>
-    <h2>Join Room</h2>
+<div class="hidden absolute z-50 w-full h-[calc(100%_-_50px)] bg-[rgba(0,_0,_0,_0.4)]" id="join-popup">
+  <div class="popup block bg-gray-100 absolute z-[60] top-1/2 left-1/2 -translate-x-1/2 translate-y-[calc(-50%_-_25px)] py-4 px-7 rounded-xl w-[380px]">
+    <div class="absolute top-[5px] right-[15px] h-[15px] cursor-pointer text-2xl" onclick="document.querySelector('#join-popup').style['display'] = 'none'">&times;</div>
+    <h2 class="text-center text-[1.8em] mb-2">Join Room</h2>
     <form id="join-room">
-      <label for="join-name">Name</label>
-      <input type="text" class="enter-submit" name="name" id="join-name" placeholder="Enter room name ...">
-      <label for="join-password">Password</label>
-      <input type="password" class="enter-submit" name="password" id="join-password" placeholder="Enter room password ...">
-      <input type="checkbox" name="spectate" id="join-spectate">
-      <label for="join-spectate">Or just spectate</label>
-      <button type="button" onclick="joinRoom(this.parentElement)">Join</button>
+      <label class="text[1.2em]" for="join-name">Name</label>
+      <input type="text" class="enter-submit block w-full p-2 mb-[10px] outline-none rounded border-[1.5px] border-gray-400" name="name" id="join-name" placeholder="Enter room name ...">
+      <label class="text[1.2em]" for="join-password">Password</label>
+      <input type="password" class="enter-submit block w-full p-2 mb-[10px] outline-none rounded border-[1.5px] border-gray-400" name="password" id="join-password" placeholder="Enter room password ...">
+      <input type="checkbox" class="relative top-[2px] w-4 aspect-square mr-1 mt-1" name="spectate" id="join-spectate">
+      <label class="text[1.2em]" for="join-spectate">Or just spectate</label>
+      <button type="button" class="w-full h-10 border-none outline-none rounded text-gray-100 mt-2 bg-[hsl(0,_0%,_10%)] hover:bg-[hsl(0,_0%,_15%)] active:bg-[hsl(0,_0%,_20%)]" onclick="joinRoom(this.parentElement)">Join</button>
     </form>
   </div>
 </div>
 
-<div class="home-content">
-  <div class="chat">
-    <div class="chat-history"></div>
-    <input type="text" class="chatbox" placeholder="Start typing..." id="chat-input">
+<div class="flex justify-around items-center my-7 mx-12">
+  <div class="w-[20%] h-[60vh] bg-zinc-500 rounded-md shadow">
+    <div class="h-[95%]"></div>
+    <input type="text" class="min-h-5 w-full h-[5%] border-none p-0 pl-1 rounded" placeholder="Start typing..." id="chat-input">
   </div>
-  <div class="board" id="board">
-    <div class="square white" id="00"></div>
-    <div class="square black" id="01"></div>
-    <div class="square white" id="02"></div>
-    <div class="square black" id="03"></div>
-    <div class="square white" id="04"></div>
-    <div class="square black" id="05"></div>
-    <div class="square white" id="06"></div>
-    <div class="square black" id="07"></div>
-
-    <div class="square black" id="10"></div>
-    <div class="square white" id="11"></div>
-    <div class="square black" id="12"></div>
-    <div class="square white" id="13"></div>
-    <div class="square black" id="14"></div>
-    <div class="square white" id="15"></div>
-    <div class="square black" id="16"></div>
-    <div class="square white" id="17"></div>
-   
-    <div class="square white" id="20"></div>
-    <div class="square black" id="21"></div>
-    <div class="square white" id="22"></div>
-    <div class="square black" id="23"></div>
-    <div class="square white" id="24"></div>
-    <div class="square black" id="25"></div>
-    <div class="square white" id="26"></div>
-    <div class="square black" id="27"></div>
-
-    <div class="square black" id="30"></div>
-    <div class="square white" id="31"></div>
-    <div class="square black" id="32"></div>
-    <div class="square white" id="33"></div>
-    <div class="square black" id="34"></div>
-    <div class="square white" id="35"></div>
-    <div class="square black" id="36"></div>
-    <div class="square white" id="37"></div>
-   
-    <div class="square white" id="40"></div>
-    <div class="square black" id="41"></div>
-    <div class="square white" id="42"></div>
-    <div class="square black" id="43"></div>
-    <div class="square white" id="44"></div>
-    <div class="square black" id="45"></div>
-    <div class="square white" id="46"></div>
-    <div class="square black" id="47"></div>
-
-    <div class="square black" id="50"></div>
-    <div class="square white" id="51"></div>
-    <div class="square black" id="52"></div>
-    <div class="square white" id="53"></div>
-    <div class="square black" id="54"></div>
-    <div class="square white" id="55"></div>
-    <div class="square black" id="56"></div>
-    <div class="square white" id="57"></div>
-   
-    <div class="square white" id="60"></div>
-    <div class="square black" id="61"></div>
-    <div class="square white" id="62"></div>
-    <div class="square black" id="63"></div>
-    <div class="square white" id="64"></div>
-    <div class="square black" id="65"></div>
-    <div class="square white" id="66"></div>
-    <div class="square black" id="67"></div>
-
-    <div class="square black" id="70"></div>
-    <div class="square white" id="71"></div>
-    <div class="square black" id="72"></div>
-    <div class="square white" id="73"></div>
-    <div class="square black" id="74"></div>
-    <div class="square white" id="75"></div>
-    <div class="square black" id="76"></div>
-    <div class="square white" id="77"></div>
-   
-</div>
-  <div class="play-buttons">
-    <button class="play-button" id="challenge">Challenge a Friend</button>
-    <button class="play-button" id="join-room" onclick="document.querySelector('#join-popup').style['display'] = 'initial'">Join Room</button>
-    <button class="play-button" id="create-room" onclick="document.querySelector('#create-popup').style['display'] = 'initial'">Create Room</button>
+  <div id="board" class="w-[min(80vh,_75vw)] aspect-square grid grid-rows-8 grid-cols-8 bg-[rgba(69,_102,_186,_0.8)] shadow-md"></div>
+  <div class="flex flex-col content-between w-[20%]">
+    <button class="h-10 bg-zinc-500 hover:bg-zinc-400 active:bg-zinc-300 text-lg text-black border-none rounded p-1 my-2 mx-0" id="challenge">Challenge a Friend</button>
+    <button class="h-10 bg-zinc-500 hover:bg-zinc-400 active:bg-zinc-300 text-lg text-black border-none rounded p-1 my-2 mx-0" id="join-room" onclick="document.querySelector('#join-popup').style['display'] = 'initial'">Join Room</button>
+    <button class="h-10 bg-zinc-500 hover:bg-zinc-400 active:bg-zinc-300 text-lg text-black border-none rounded p-1 my-2 mx-0" id="create-room" onclick="document.querySelector('#create-popup').style['display'] = 'initial'">Create Room</button>
   </div>
 </div>
 {% endblock %}

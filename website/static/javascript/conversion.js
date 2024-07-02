@@ -48,7 +48,7 @@ function generateEmptyBoard(flip) {
 
             color = 'white'
             if ((i + j) % 2 === 1) {color = 'black'};
-            boardHtml.innerHTML += `<div class="square ${color}" id="${row + col}"></div>`;
+            boardHtml.innerHTML += `<div class="square relative flex justify-center items-center bg-${color}" id="${row + col}"></div>`;
         }
     }
 }
@@ -58,7 +58,7 @@ function addPiecesToHtml(board, flip) {
 
     let addPiece = function (type, color, pos) {
         let square = document.getElementById(pos);
-        square.innerHTML = `<img src="http://127.0.0.1:5000/pieces/${color + '_' + type}" class="piece"></img>`;
+        square.innerHTML = `<img src="http://127.0.0.1:5000/pieces/${color + '_' + type}" class="piece w-[80%] aspect-square absolute z-10"></img>`;
     }
 
     generateEmptyBoard(flip);

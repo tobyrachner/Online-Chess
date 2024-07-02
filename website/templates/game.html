@@ -9,11 +9,11 @@
 {% endblock %}
 {% block content %}
 <div class="home-content">
-  <div class="chat">
-    <div class="chat-history"></div>
-    <input type="text" class="chatbox" placeholder="Start typing..." id="chat-input">
+  <div class="w-[20%] h-[60vh] bg-zinc-500 rounded-md shadow">
+    <div class="h-[95%]"></div>
+    <input type="text" class="min-h-5 w-full h-[5%] border-none p-0 pl-1 rounded" placeholder="Start typing..." id="chat-input">
   </div>
-  <div class="board" id="board"></div>
+  <div class="w-[min(80vh,_75vw)] aspect-square grid grid-rows-8 grid-cols-8 bg-[rgba(69,_102,_186,_0.8)]" id="board"></div>
   <div class="info-box">
     
   </div>

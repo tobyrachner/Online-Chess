@@ -5,16 +5,18 @@
 <link rel="stylesheet" href="../static/styles/auth.css">
 {% endblock %}
 {% block content %}
-<div class="container">
-  <h2>Login</h2>
-  <form method="POST">
-    <fieldset>
-      <label for="user">E-mail:</label>
-      <input id="email" name="email" type="email" class="email" placeholder="Enter Email ..." required>
-      <label for="password">Password:</label>
-      <input id="password" name="password" type="password" placeholder="Enter Password ..." required>
-      <button type="submit" class="submit">Login</button>
-    </fieldset>
-  </form>
+<div class="w-full h-[calc(100vh_-_56px)] bg-[hsl(0,_0%,_70%)]">
+  <div class="block bg-gray-100 absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-[calc(-50%_-_25px)] pt-4 pb-8 px-7 w-[500px] rounded-[10px]">
+    <h2 class="text-center text-[1.8em] mb-[10px]">Login</h2>
+    <form method="POST">
+      <fieldset>
+        <label class="text-[1.2em]" for="user">E-mail:</label>
+        <input id="email" name="email" type="email" class="email block w-full p-[10px] mb-[10px] outline-none border-[1.5px] border-gray-400 rounded" placeholder="Enter Email ..." required>
+        <label class="text-[1.2em]" for="password">Password:</label>
+        <input id="password" name="password" type="password" class="block w-full p-[10px] mb-[10px] outline-none border-[1.5px] border-gray-400 rounded" placeholder="Enter Password ..." required>
+        <button type="submit" class="submit w-full h-10 border-none outline-none rounded mt-2 text-gray-100 bg-[hsl(0,_0%,_10%)] hover:bg-[hsl(0,_0%,_15%)] active:bg-[hsl(0,_0%,_20%)]">Login</button>
+      </fieldset>
+    </form>
+  </div>
 </div>
 {% endblock %}
